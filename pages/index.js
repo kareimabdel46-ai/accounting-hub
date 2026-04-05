@@ -20,7 +20,7 @@ export default function Home() {
 
   const [salesRevenue, setSalesRevenue] = useState("");
   const [cogs, setCogs] = useState("");
-  const [inventoryExpenses, setInventoryExpenses] = useState("");
+  const [inventoryExpenses, setInventoryExpenses] = useState(""); 
 
   const [assets, setAssets] = useState("");
   const [liabilities, setLiabilities] = useState("");
