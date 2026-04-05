@@ -8,7 +8,7 @@ export default function Home() {
   const [bankOpen, setBankOpen] = useState(true);
   const [tAccountOpen, setTAccountOpen] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(true);
- 
+
   const [assetOpen, setAssetOpen] = useState(true);
   const [liabilityOpen, setLiabilityOpen] = useState(false);
   const [equityOpen, setEquityOpen] = useState(false);
@@ -136,11 +136,7 @@ export default function Home() {
         ...baseStyles.subNavButton,
         color: currentTheme.subNavText,
         background: activePage === pageKey ? currentTheme.subNavActiveBg : "transparent",
-        ...(
-          activePage === pageKey
-            ? { color: currentTheme.subNavActiveText }
-            : {}
-        ),
+        ...(activePage === pageKey ? { color: currentTheme.subNavActiveText } : {}),
       }}
     >
       {label}
@@ -158,11 +154,7 @@ export default function Home() {
         ...baseStyles.subNavButton,
         color: currentTheme.subNavText,
         background: selectedAccount === label ? currentTheme.subNavActiveBg : "transparent",
-        ...(
-          selectedAccount === label
-            ? { color: currentTheme.subNavActiveText }
-            : {}
-        ),
+        ...(selectedAccount === label ? { color: currentTheme.subNavActiveText } : {}),
       }}
     >
       {label}
@@ -181,12 +173,12 @@ export default function Home() {
         style={{
           ...baseStyles.sidebar,
           background: currentTheme.sidebarBackground,
-          borderRight: `1px solid ${currentTheme.sidebarBorder}`,
+          borderRight: 1px solid ${currentTheme.sidebarBorder},
         }}
       >
         <div style={baseStyles.brandBox}>
           <img
-            src="/logo.png"
+            src="/publiclogo.png"
             alt="Accounting Hub Logo"
             style={baseStyles.logoImage}
           />
@@ -206,7 +198,7 @@ export default function Home() {
             ...baseStyles.navButton,
             background: activePage === "dashboard" ? currentTheme.navActiveBg : currentTheme.navBg,
             color: currentTheme.navText,
-            border: `1px solid ${activePage === "dashboard" ? currentTheme.navActiveBorder : "transparent"}`,
+            border: 1px solid ${activePage === "dashboard" ? currentTheme.navActiveBorder : "transparent"},
           }}
         >
           Dashboard
@@ -264,7 +256,10 @@ export default function Home() {
 
         {tAccountOpen && (
           <div style={baseStyles.subMenu}>
-            <button style={{ ...baseStyles.groupButton, color: currentTheme.groupText }} onClick={() => setAssetOpen(!assetOpen)}>
+            <button
+              style={{ ...baseStyles.groupButton, color: currentTheme.groupText }}
+              onClick={() => setAssetOpen(!assetOpen)}
+            >
               Assets
             </button>
             {assetOpen && (
@@ -277,7 +272,10 @@ export default function Home() {
               </div>
             )}
 
-            <button style={{ ...baseStyles.groupButton, color: currentTheme.groupText }} onClick={() => setLiabilityOpen(!liabilityOpen)}>
+            <button
+              style={{ ...baseStyles.groupButton, color: currentTheme.groupText }}
+              onClick={() => setLiabilityOpen(!liabilityOpen)}
+            >
               Liabilities
             </button>
             {liabilityOpen && (
@@ -288,7 +286,10 @@ export default function Home() {
               </div>
             )}
 
-            <button style={{ ...baseStyles.groupButton, color: currentTheme.groupText }} onClick={() => setEquityOpen(!equityOpen)}>
+            <button
+              style={{ ...baseStyles.groupButton, color: currentTheme.groupText }}
+              onClick={() => setEquityOpen(!equityOpen)}
+            >
               Equity
             </button>
             {equityOpen && (
@@ -298,7 +299,10 @@ export default function Home() {
               </div>
             )}
 
-            <button style={{ ...baseStyles.groupButton, color: currentTheme.groupText }} onClick={() => setRevenueOpen(!revenueOpen)}>
+            <button
+              style={{ ...baseStyles.groupButton, color: currentTheme.groupText }}
+              onClick={() => setRevenueOpen(!revenueOpen)}
+            >
               Revenue
             </button>
             {revenueOpen && (
@@ -308,7 +312,10 @@ export default function Home() {
               </div>
             )}
 
-            <button style={{ ...baseStyles.groupButton, color: currentTheme.groupText }} onClick={() => setExpenseOpen(!expenseOpen)}>
+            <button
+              style={{ ...baseStyles.groupButton, color: currentTheme.groupText }}
+              onClick={() => setExpenseOpen(!expenseOpen)}
+            >
               Expenses
             </button>
             {expenseOpen && (
@@ -334,7 +341,13 @@ export default function Home() {
 
         {settingsOpen && (
           <div style={baseStyles.subMenu}>
-            <div style={{ ...baseStyles.groupButton, color: currentTheme.groupText, cursor: "default" }}>
+            <div
+              style={{
+                ...baseStyles.groupButton,
+                color: currentTheme.groupText,
+                cursor: "default",
+              }}
+            >
               Lighting
             </div>
 
@@ -363,6 +376,17 @@ export default function Home() {
             </button>
           </div>
         )}
+
+        <button
+          onClick={() => setActivePage("about")}
+          style={{
+            ...baseStyles.navButton,
+            background: currentTheme.navBg,
+            color: currentTheme.navText,
+          }}
+        >
+          About Us
+        </button>
       </aside>
 
       <main style={baseStyles.main}>
@@ -412,10 +436,30 @@ export default function Home() {
             </section>
 
             <section style={baseStyles.cardGrid}>
-              <Card title="Service Net Income" value={serviceNetIncome} subtitle="Revenue - Expenses" theme={currentTheme} />
-              <Card title="Inventory Net Income" value={inventoryNetIncome} subtitle="Sales - COGS - Expenses" theme={currentTheme} />
-              <Card title="Total Cash Flow" value={totalCashFlow} subtitle="Operating + Investing + Financing" theme={currentTheme} />
-              <Card title="Adjusted Bank Balance" value={adjustedBankBalance} subtitle="Bank reconciliation" theme={currentTheme} />
+              <Card
+                title="Service Net Income"
+                value={serviceNetIncome}
+                subtitle="Revenue - Expenses"
+                theme={currentTheme}
+              />
+              <Card
+                title="Inventory Net Income"
+                value={inventoryNetIncome}
+                subtitle="Sales - COGS - Expenses"
+                theme={currentTheme}
+              />
+              <Card
+                title="Total Cash Flow"
+                value={totalCashFlow}
+                subtitle="Operating + Investing + Financing"
+                theme={currentTheme}
+              />
+              <Card
+                title="Adjusted Bank Balance"
+                value={adjustedBankBalance}
+                subtitle="Bank reconciliation"
+                theme={currentTheme}
+              />
             </section>
 
             <div style={{ marginTop: 28 }}>
@@ -423,14 +467,62 @@ export default function Home() {
                 Quick Account Access
               </h3>
               <div style={baseStyles.cardGrid}>
-                <AccountBox title="Cash" value={0} subtitle="Asset account" onClick={() => openAccountFromDashboard("Cash", "Assets")} theme={currentTheme} />
-                <AccountBox title="Accounts Receivable" value={0} subtitle="Asset account" onClick={() => openAccountFromDashboard("Accounts Receivable", "Assets")} theme={currentTheme} />
-                <AccountBox title="Notes Receivable" value={0} subtitle="Asset account" onClick={() => openAccountFromDashboard("Notes Receivable", "Assets")} theme={currentTheme} />
-                <AccountBox title="Accounts Payable" value={0} subtitle="Liability account" onClick={() => openAccountFromDashboard("Accounts Payable", "Liabilities")} theme={currentTheme} />
-                <AccountBox title="Notes Payable" value={0} subtitle="Liability account" onClick={() => openAccountFromDashboard("Notes Payable", "Liabilities")} theme={currentTheme} />
-                <AccountBox title="Owner Capital" value={0} subtitle="Equity account" onClick={() => openAccountFromDashboard("Owner Capital", "Equity")} theme={currentTheme} />
-                <AccountBox title="Service Revenue" value={0} subtitle="Revenue account" onClick={() => openAccountFromDashboard("Service Revenue", "Revenue")} theme={currentTheme} />
-                <AccountBox title="Rent Expense" value={0} subtitle="Expense account" onClick={() => openAccountFromDashboard("Rent Expense", "Expense")} theme={currentTheme} />
+                <AccountBox
+                  title="Cash"
+                  value={0}
+                  subtitle="Asset account"
+                  onClick={() => openAccountFromDashboard("Cash", "Assets")}
+                  theme={currentTheme}
+                />
+                <AccountBox
+                  title="Accounts Receivable"
+                  value={0}
+                  subtitle="Asset account"
+                  onClick={() => openAccountFromDashboard("Accounts Receivable", "Assets")}
+                  theme={currentTheme}
+                />
+                <AccountBox
+                  title="Notes Receivable"
+                  value={0}
+                  subtitle="Asset account"
+                  onClick={() => openAccountFromDashboard("Notes Receivable", "Assets")}
+                  theme={currentTheme}
+                />
+                <AccountBox
+                  title="Accounts Payable"
+                  value={0}
+                  subtitle="Liability account"
+                  onClick={() => openAccountFromDashboard("Accounts Payable", "Liabilities")}
+                  theme={currentTheme}
+                />
+                <AccountBox
+                  title="Notes Payable"
+                  value={0}
+                  subtitle="Liability account"
+                  onClick={() => openAccountFromDashboard("Notes Payable", "Liabilities")}
+                  theme={currentTheme}
+                />
+                <AccountBox
+                  title="Owner Capital"
+                  value={0}
+                  subtitle="Equity account"
+                  onClick={() => openAccountFromDashboard("Owner Capital", "Equity")}
+                  theme={currentTheme}
+                />
+                <AccountBox
+                  title="Service Revenue"
+                  value={0}
+                  subtitle="Revenue account"
+                  onClick={() => openAccountFromDashboard("Service Revenue", "Revenue")}
+                  theme={currentTheme}
+                />
+                <AccountBox
+                  title="Rent Expense"
+                  value={0}
+                  subtitle="Expense account"
+                  onClick={() => openAccountFromDashboard("Rent Expense", "Expense")}
+                  theme={currentTheme}
+                />
               </div>
             </div>
           </>
@@ -438,12 +530,26 @@ export default function Home() {
 
         {activePage === "service" && (
           <SectionShell theme={currentTheme}>
-            <SectionTitle title="Income Statement - Service Company" desc="For businesses that provide services and do not sell inventory." theme={currentTheme} />
+            <SectionTitle
+              title="Income Statement - Service Company"
+              desc="For businesses that provide services and do not sell inventory."
+              theme={currentTheme}
+            />
             <div style={baseStyles.twoCol}>
               <Panel theme={currentTheme}>
                 <h3 style={{ ...baseStyles.panelTitle, color: currentTheme.textPrimary }}>Inputs</h3>
-                <Input label="Service Revenue" value={serviceRevenue} setValue={setServiceRevenue} theme={currentTheme} />
-                <Input label="Operating Expenses" value={serviceExpenses} setValue={setServiceExpenses} theme={currentTheme} />
+                <Input
+                  label="Service Revenue"
+                  value={serviceRevenue}
+                  setValue={setServiceRevenue}
+                  theme={currentTheme}
+                />
+                <Input
+                  label="Operating Expenses"
+                  value={serviceExpenses}
+                  setValue={setServiceExpenses}
+                  theme={currentTheme}
+                />
               </Panel>
               <Panel theme={currentTheme}>
                 <h3 style={{ ...baseStyles.panelTitle, color: currentTheme.textPrimary }}>Results</h3>
@@ -455,13 +561,27 @@ export default function Home() {
 
         {activePage === "inventory" && (
           <SectionShell theme={currentTheme}>
-            <SectionTitle title="Income Statement - Inventory Company" desc="For merchandising companies that use sales revenue and cost of goods sold." theme={currentTheme} />
+            <SectionTitle
+              title="Income Statement - Inventory Company"
+              desc="For merchandising companies that use sales revenue and cost of goods sold."
+              theme={currentTheme}
+            />
             <div style={baseStyles.twoCol}>
               <Panel theme={currentTheme}>
                 <h3 style={{ ...baseStyles.panelTitle, color: currentTheme.textPrimary }}>Inputs</h3>
-                <Input label="Sales Revenue" value={salesRevenue} setValue={setSalesRevenue} theme={currentTheme} />
+                <Input
+                  label="Sales Revenue"
+                  value={salesRevenue}
+                  setValue={setSalesRevenue}
+                  theme={currentTheme}
+                />
                 <Input label="Cost of Goods Sold" value={cogs} setValue={setCogs} theme={currentTheme} />
-                <Input label="Operating Expenses" value={inventoryExpenses} setValue={setInventoryExpenses} theme={currentTheme} />
+                <Input
+                  label="Operating Expenses"
+                  value={inventoryExpenses}
+                  setValue={setInventoryExpenses}
+                  theme={currentTheme}
+                />
               </Panel>
               <Panel theme={currentTheme}>
                 <h3 style={{ ...baseStyles.panelTitle, color: currentTheme.textPrimary }}>Results</h3>
@@ -474,7 +594,11 @@ export default function Home() {
 
         {activePage === "sfp" && (
           <SectionShell theme={currentTheme}>
-            <SectionTitle title="Statement of Financial Position" desc="Review whether assets equal liabilities plus equity." theme={currentTheme} />
+            <SectionTitle
+              title="Statement of Financial Position"
+              desc="Review whether assets equal liabilities plus equity."
+              theme={currentTheme}
+            />
             <div style={baseStyles.twoCol}>
               <Panel theme={currentTheme}>
                 <Input label="Assets" value={assets} setValue={setAssets} theme={currentTheme} />
@@ -483,8 +607,17 @@ export default function Home() {
               </Panel>
               <Panel theme={currentTheme}>
                 <ResultBox label="Assets" value={Number(assets || 0)} theme={currentTheme} />
-                <ResultBox label="Liabilities + Equity" value={Number(liabilities || 0) + Number(equity || 0)} theme={currentTheme} />
-                <ResultBox label="Status" value={balanceCheck === 0 ? "Balanced correctly" : `Difference: ${balanceCheck}`} strong theme={currentTheme} />
+                <ResultBox
+                  label="Liabilities + Equity"
+                  value={Number(liabilities || 0) + Number(equity || 0)}
+                  theme={currentTheme}
+                />
+                <ResultBox
+                  label="Status"
+                  value={balanceCheck === 0 ? "Balanced correctly" : Difference: ${balanceCheck}}
+                  strong
+                  theme={currentTheme}
+                />
               </Panel>
             </div>
           </SectionShell>
@@ -492,12 +625,31 @@ export default function Home() {
 
         {activePage === "cashflow" && (
           <SectionShell theme={currentTheme}>
-            <SectionTitle title="Cash Flow Statement" desc="Track operating, investing, and financing sections." theme={currentTheme} />
+            <SectionTitle
+              title="Cash Flow Statement"
+              desc="Track operating, investing, and financing sections."
+              theme={currentTheme}
+            />
             <div style={baseStyles.twoCol}>
               <Panel theme={currentTheme}>
-                <Input label="Operating Cash Flow" value={operatingCash} setValue={setOperatingCash} theme={currentTheme} />
-                <Input label="Investing Cash Flow" value={investingCash} setValue={setInvestingCash} theme={currentTheme} />
-                <Input label="Financing Cash Flow" value={financingCash} setValue={setFinancingCash} theme={currentTheme} />
+                <Input
+                  label="Operating Cash Flow"
+                  value={operatingCash}
+                  setValue={setOperatingCash}
+                  theme={currentTheme}
+                />
+                <Input
+                  label="Investing Cash Flow"
+                  value={investingCash}
+                  setValue={setInvestingCash}
+                  theme={currentTheme}
+                />
+                <Input
+                  label="Financing Cash Flow"
+                  value={financingCash}
+                  setValue={setFinancingCash}
+                  theme={currentTheme}
+                />
               </Panel>
               <Panel theme={currentTheme}>
                 <ResultBox label="Total Cash Flow" value={totalCashFlow} strong theme={currentTheme} />
@@ -508,12 +660,31 @@ export default function Home() {
 
         {activePage === "equityStatement" && (
           <SectionShell theme={currentTheme}>
-            <SectionTitle title="Statement of Changes in Equity" desc="Track changes in owner equity across the period." theme={currentTheme} />
+            <SectionTitle
+              title="Statement of Changes in Equity"
+              desc="Track changes in owner equity across the period."
+              theme={currentTheme}
+            />
             <div style={baseStyles.twoCol}>
               <Panel theme={currentTheme}>
-                <Input label="Beginning Capital" value={beginningCapital} setValue={setBeginningCapital} theme={currentTheme} />
-                <Input label="Additional Investment" value={additionalInvestment} setValue={setAdditionalInvestment} theme={currentTheme} />
-                <Input label="Net Income" value={netIncomeEquity} setValue={setNetIncomeEquity} theme={currentTheme} />
+                <Input
+                  label="Beginning Capital"
+                  value={beginningCapital}
+                  setValue={setBeginningCapital}
+                  theme={currentTheme}
+                />
+                <Input
+                  label="Additional Investment"
+                  value={additionalInvestment}
+                  setValue={setAdditionalInvestment}
+                  theme={currentTheme}
+                />
+                <Input
+                  label="Net Income"
+                  value={netIncomeEquity}
+                  setValue={setNetIncomeEquity}
+                  theme={currentTheme}
+                />
                 <Input label="Drawings" value={drawings} setValue={setDrawings} theme={currentTheme} />
               </Panel>
               <Panel theme={currentTheme}>
@@ -525,15 +696,29 @@ export default function Home() {
 
         {activePage === "retainedEarnings" && (
           <SectionShell theme={currentTheme}>
-            <SectionTitle title="Retained Earnings Statement" desc="Track beginning retained earnings, net income, and dividends." theme={currentTheme} />
+            <SectionTitle
+              title="Retained Earnings Statement"
+              desc="Track beginning retained earnings, net income, and dividends."
+              theme={currentTheme}
+            />
             <div style={baseStyles.twoCol}>
               <Panel theme={currentTheme}>
-                <Input label="Beginning Retained Earnings" value={beginningRE} setValue={setBeginningRE} theme={currentTheme} />
+                <Input
+                  label="Beginning Retained Earnings"
+                  value={beginningRE}
+                  setValue={setBeginningRE}
+                  theme={currentTheme}
+                />
                 <Input label="Net Income" value={netIncomeRE} setValue={setNetIncomeRE} theme={currentTheme} />
                 <Input label="Dividends" value={dividendsRE} setValue={setDividendsRE} theme={currentTheme} />
               </Panel>
               <Panel theme={currentTheme}>
-                <ResultBox label="Ending Retained Earnings" value={endingRetainedEarnings} strong theme={currentTheme} />
+                <ResultBox
+                  label="Ending Retained Earnings"
+                  value={endingRetainedEarnings}
+                  strong
+                  theme={currentTheme}
+                />
               </Panel>
             </div>
           </SectionShell>
@@ -541,21 +726,45 @@ export default function Home() {
 
         {activePage === "bankReconciliation" && (
           <SectionShell theme={currentTheme}>
-            <SectionTitle title="Bank Reconciliation Statement" desc="Compare the adjusted bank balance and adjusted book balance." theme={currentTheme} />
+            <SectionTitle
+              title="Bank Reconciliation Statement"
+              desc="Compare the adjusted bank balance and adjusted book balance."
+              theme={currentTheme}
+            />
             <div style={baseStyles.twoCol}>
               <Panel theme={currentTheme}>
                 <h3 style={{ ...baseStyles.panelTitle, color: currentTheme.textPrimary }}>Bank Side</h3>
                 <Input label="Bank Balance" value={bankBalance} setValue={setBankBalance} theme={currentTheme} />
-                <Input label="Deposits in Transit" value={depositsInTransit} setValue={setDepositsInTransit} theme={currentTheme} />
-                <Input label="Outstanding Checks" value={outstandingChecks} setValue={setOutstandingChecks} theme={currentTheme} />
+                <Input
+                  label="Deposits in Transit"
+                  value={depositsInTransit}
+                  setValue={setDepositsInTransit}
+                  theme={currentTheme}
+                />
+                <Input
+                  label="Outstanding Checks"
+                  value={outstandingChecks}
+                  setValue={setOutstandingChecks}
+                  theme={currentTheme}
+                />
               </Panel>
 
               <Panel theme={currentTheme}>
                 <h3 style={{ ...baseStyles.panelTitle, color: currentTheme.textPrimary }}>Book Side</h3>
                 <Input label="Book Balance" value={bookBalance} setValue={setBookBalance} theme={currentTheme} />
-                <Input label="Bank Service Charge" value={bankServiceCharge} setValue={setBankServiceCharge} theme={currentTheme} />
+                <Input
+                  label="Bank Service Charge"
+                  value={bankServiceCharge}
+                  setValue={setBankServiceCharge}
+                  theme={currentTheme}
+                />
                 <Input label="NSF Check" value={nsfCheck} setValue={setNsfCheck} theme={currentTheme} />
-                <Input label="Interest Earned" value={interestEarned} setValue={setInterestEarned} theme={currentTheme} />
+                <Input
+                  label="Interest Earned"
+                  value={interestEarned}
+                  setValue={setInterestEarned}
+                  theme={currentTheme}
+                />
               </Panel>
             </div>
 
@@ -564,7 +773,7 @@ export default function Home() {
               <ResultBox label="Adjusted Book Balance" value={adjustedBookBalance} theme={currentTheme} />
               <ResultBox
                 label="Reconciliation Status"
-                value={reconciliationDifference === 0 ? "Reconciled correctly" : `Difference: ${reconciliationDifference}`}
+                value={reconciliationDifference === 0 ? "Reconciled correctly" : Difference: ${reconciliationDifference}}
                 strong
                 theme={currentTheme}
               />
@@ -575,8 +784,8 @@ export default function Home() {
         {activePage === "taccounts" && (
           <SectionShell theme={currentTheme}>
             <SectionTitle
-              title={`T Account - ${selectedAccount}`}
-              desc={`Category: ${selectedAccountType}. Click any account name in the sidebar or dashboard to move directly to it.`}
+              title={T Account - ${selectedAccount}}
+              desc={Category: ${selectedAccountType}. Click any account name in the sidebar or dashboard to move directly to it.}
               theme={currentTheme}
             />
             <div style={baseStyles.twoCol}>
@@ -587,7 +796,7 @@ export default function Home() {
                 <Input label="Credit 2" value={tCredit2} setValue={setTCredit2} theme={currentTheme} />
               </Panel>
               <Panel theme={currentTheme}>
-                <div style={{ ...baseStyles.tAccount, border: `1px solid ${currentTheme.panelBorder}` }}>
+                <div style={{ ...baseStyles.tAccount, border: 1px solid ${currentTheme.panelBorder} }}>
                   <div style={{ ...baseStyles.tSide, background: currentTheme.panelBg }}>
                     <div style={{ ...baseStyles.tHeading, color: currentTheme.textPrimary }}>Debits</div>
                     <div style={{ ...baseStyles.tValue, color: currentTheme.blueStrong }}>{totalDebits}</div>
@@ -600,6 +809,52 @@ export default function Home() {
                 </div>
                 <ResultBox label="Balance" value={tBalance} strong theme={currentTheme} />
               </Panel>
+            </div>
+          </SectionShell>
+        )}
+
+        {activePage === "about" && (
+          <SectionShell theme={currentTheme}>
+            <SectionTitle
+              title="About Us"
+              desc="Learn more about Accounting Hub and its purpose."
+              theme={currentTheme}
+            />
+
+            <div style={{ textAlign: "center", marginBottom: "24px" }}>
+              <img
+                src="/publiclogo.png"
+                alt="Accounting Hub Logo"
+                style={baseStyles.aboutLogo}
+              />
+            </div>
+
+            <div
+              style={{
+                ...baseStyles.aboutText,
+                color: currentTheme.textPrimary,
+                background: currentTheme.panelBg,
+                border: 1px solid ${currentTheme.panelBorder},
+              }}
+            >
+              <p>
+                Accounting Hub is an interactive platform designed to make accounting simple,
+                organized, and easy to navigate. The system is built so users can quickly move
+                between financial statements, T-accounts, and bank reconciliation without confusion.
+              </p>
+
+              <p>
+                The goal of this website is to provide a smooth and user-friendly experience,
+                where students can focus on understanding accounting concepts instead of struggling
+                with complex layouts. Every section is structured clearly to allow fast access and
+                efficient workflow.
+              </p>
+
+              <p>
+                This project was developed by Kareem Abdelmajeed, a first-year accounting student
+                at Princess Sumaya University for Technology (PSUT), as part of building practical
+                skills and creating a tool that makes accounting more accessible and intuitive.
+              </p>
             </div>
           </SectionShell>
         )}
@@ -654,7 +909,7 @@ function AccountBox({ title, value, subtitle, onClick, theme }) {
       style={{
         ...baseStyles.accountBox,
         background: theme.cardBg,
-        border: `1px solid ${theme.panelBorder}`,
+        border: 1px solid ${theme.panelBorder},
         boxShadow: theme.shadow,
       }}
     >
@@ -671,7 +926,7 @@ function Panel({ children, theme }) {
       style={{
         ...baseStyles.panel,
         background: theme.panelBg,
-        border: `1px solid ${theme.panelBorder}`,
+        border: 1px solid ${theme.panelBorder},
       }}
     >
       {children}
@@ -689,11 +944,11 @@ function Input({ label, value, setValue, theme }) {
         style={{
           ...baseStyles.input,
           background: theme.inputBg,
-          border: `1px solid ${theme.inputBorder}`,
+          border: 1px solid ${theme.inputBorder},
           color: theme.textPrimary,
         }}
         type="number"
-        placeholder={`Enter ${label.toLowerCase()}`}
+        placeholder={Enter ${label.toLowerCase()}}
       />
     </div>
   );
@@ -705,7 +960,7 @@ function ResultBox({ label, value, strong = false, theme }) {
       style={{
         ...baseStyles.resultBox,
         background: strong ? theme.resultStrongBg : theme.resultBg,
-        border: `1px solid ${strong ? theme.resultStrongBorder : theme.panelBorder}`,
+        border: 1px solid ${strong ? theme.resultStrongBorder : theme.panelBorder},
         color: theme.textPrimary,
       }}
     >
@@ -1007,5 +1262,19 @@ const baseStyles = {
   tValue: {
     fontSize: 30,
     fontWeight: 800,
+  },
+  aboutLogo: {
+    width: 220,
+    maxWidth: "100%",
+    borderRadius: 20,
+    boxShadow: "0 12px 30px rgba(37,99,235,0.25)",
+    background: "transparent",
+  },
+  aboutText: {
+    lineHeight: 1.9,
+    maxWidth: 900,
+    padding: 24,
+    borderRadius: 20,
+    fontSize: 16,
   },
 };
