@@ -4,13 +4,13 @@ export default function Home() {
   const [activePage, setActivePage] = useState("dashboard");
   const [theme, setTheme] = useState("dark");
 
-  const [financialOpen, setFinancialOpen] = useState(true); 
+  const [financialOpen, setFinancialOpen] = useState(true);
   const [bankOpen, setBankOpen] = useState(true);
   const [tAccountOpen, setTAccountOpen] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(true);
 
   const [assetOpen, setAssetOpen] = useState(true);
-  const [liabilityOpen, setLiabilityOpen] = useState(false); 
+  const [liabilityOpen, setLiabilityOpen] = useState(false);
   const [equityOpen, setEquityOpen] = useState(false);
   const [revenueOpen, setRevenueOpen] = useState(false);
   const [expenseOpen, setExpenseOpen] = useState(false);
@@ -20,7 +20,7 @@ export default function Home() {
 
   const [salesRevenue, setSalesRevenue] = useState("");
   const [cogs, setCogs] = useState("");
-  const [inventoryExpenses, setInventoryExpenses] = useState(""); 
+  const [inventoryExpenses, setInventoryExpenses] = useState("");
 
   const [assets, setAssets] = useState("");
   const [liabilities, setLiabilities] = useState("");
@@ -173,7 +173,7 @@ export default function Home() {
         style={{
           ...baseStyles.sidebar,
           background: currentTheme.sidebarBackground,
-          borderRight: 1px solid ${currentTheme.sidebarBorder},
+          borderRight: `1px solid ${currentTheme.sidebarBorder}`,
         }}
       >
         <div style={baseStyles.brandBox}>
@@ -198,7 +198,7 @@ export default function Home() {
             ...baseStyles.navButton,
             background: activePage === "dashboard" ? currentTheme.navActiveBg : currentTheme.navBg,
             color: currentTheme.navText,
-            border: 1px solid ${activePage === "dashboard" ? currentTheme.navActiveBorder : "transparent"},
+            border: `1px solid ${activePage === "dashboard" ? currentTheme.navActiveBorder : "transparent"}`,
           }}
         >
           Dashboard
@@ -614,7 +614,7 @@ export default function Home() {
                 />
                 <ResultBox
                   label="Status"
-                  value={balanceCheck === 0 ? "Balanced correctly" : Difference: ${balanceCheck}}
+                  value={balanceCheck === 0 ? "Balanced correctly" : `Difference: ${balanceCheck}`}
                   strong
                   theme={currentTheme}
                 />
@@ -773,7 +773,7 @@ export default function Home() {
               <ResultBox label="Adjusted Book Balance" value={adjustedBookBalance} theme={currentTheme} />
               <ResultBox
                 label="Reconciliation Status"
-                value={reconciliationDifference === 0 ? "Reconciled correctly" : Difference: ${reconciliationDifference}}
+                value={reconciliationDifference === 0 ? "Reconciled correctly" : `Difference: ${reconciliationDifference}`}
                 strong
                 theme={currentTheme}
               />
@@ -784,8 +784,8 @@ export default function Home() {
         {activePage === "taccounts" && (
           <SectionShell theme={currentTheme}>
             <SectionTitle
-              title={T Account - ${selectedAccount}}
-              desc={Category: ${selectedAccountType}. Click any account name in the sidebar or dashboard to move directly to it.}
+              title={`T Account - ${selectedAccount}`}
+              desc={`Category: ${selectedAccountType}. Click any account name in the sidebar or dashboard to move directly to it.`}
               theme={currentTheme}
             />
             <div style={baseStyles.twoCol}>
@@ -796,7 +796,7 @@ export default function Home() {
                 <Input label="Credit 2" value={tCredit2} setValue={setTCredit2} theme={currentTheme} />
               </Panel>
               <Panel theme={currentTheme}>
-                <div style={{ ...baseStyles.tAccount, border: 1px solid ${currentTheme.panelBorder} }}>
+                <div style={{ ...baseStyles.tAccount, border: `1px solid ${currentTheme.panelBorder}` }}>
                   <div style={{ ...baseStyles.tSide, background: currentTheme.panelBg }}>
                     <div style={{ ...baseStyles.tHeading, color: currentTheme.textPrimary }}>Debits</div>
                     <div style={{ ...baseStyles.tValue, color: currentTheme.blueStrong }}>{totalDebits}</div>
@@ -834,7 +834,7 @@ export default function Home() {
                 ...baseStyles.aboutText,
                 color: currentTheme.textPrimary,
                 background: currentTheme.panelBg,
-                border: 1px solid ${currentTheme.panelBorder},
+                border: `1px solid ${currentTheme.panelBorder}`,
               }}
             >
               <p>
@@ -909,7 +909,7 @@ function AccountBox({ title, value, subtitle, onClick, theme }) {
       style={{
         ...baseStyles.accountBox,
         background: theme.cardBg,
-        border: 1px solid ${theme.panelBorder},
+        border: `1px solid ${theme.panelBorder}`,
         boxShadow: theme.shadow,
       }}
     >
@@ -926,7 +926,7 @@ function Panel({ children, theme }) {
       style={{
         ...baseStyles.panel,
         background: theme.panelBg,
-        border: 1px solid ${theme.panelBorder},
+        border: `1px solid ${theme.panelBorder}`,
       }}
     >
       {children}
@@ -944,11 +944,11 @@ function Input({ label, value, setValue, theme }) {
         style={{
           ...baseStyles.input,
           background: theme.inputBg,
-          border: 1px solid ${theme.inputBorder},
+          border: `1px solid ${theme.inputBorder}`,
           color: theme.textPrimary,
         }}
         type="number"
-        placeholder={Enter ${label.toLowerCase()}}
+        placeholder={`Enter ${label.toLowerCase()}`}
       />
     </div>
   );
@@ -960,7 +960,7 @@ function ResultBox({ label, value, strong = false, theme }) {
       style={{
         ...baseStyles.resultBox,
         background: strong ? theme.resultStrongBg : theme.resultBg,
-        border: 1px solid ${strong ? theme.resultStrongBorder : theme.panelBorder},
+        border: `1px solid ${strong ? theme.resultStrongBorder : theme.panelBorder}`,
         color: theme.textPrimary,
       }}
     >
