@@ -4,7 +4,7 @@ export default function Home() {
   const [activePage, setActivePage] = useState("dashboard");
   const [theme, setTheme] = useState("dark");
 
-  const [financialOpen, setFinancialOpen] = useState(true);
+  const [financialOpen, setFinancialOpen] = useState(true); 
   const [bankOpen, setBankOpen] = useState(true);
   const [tAccountOpen, setTAccountOpen] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(true);
