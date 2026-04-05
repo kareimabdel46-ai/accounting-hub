@@ -914,7 +914,7 @@ const baseStyles = {
   },
   cardGrid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", 
+    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
     gap: 18,
   },
   summaryCard: {
@@ -1008,9 +1008,4 @@ const baseStyles = {
     fontSize: 30,
     fontWeight: 800,
   },
-  <img
-  src="/logo.png"
-  alt="Accounting Hub Logo"
-  style={baseStyles.logoImage}
-/>
 };
