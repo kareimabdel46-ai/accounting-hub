@@ -10,7 +10,7 @@ export default function Home() {
   const [settingsOpen, setSettingsOpen] = useState(true);
 
   const [assetOpen, setAssetOpen] = useState(true);
-  const [liabilityOpen, setLiabilityOpen] = useState(false);
+  const [liabilityOpen, setLiabilityOpen] = useState(false); 
   const [equityOpen, setEquityOpen] = useState(false);
   const [revenueOpen, setRevenueOpen] = useState(false);
   const [expenseOpen, setExpenseOpen] = useState(false);
