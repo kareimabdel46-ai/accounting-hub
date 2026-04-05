@@ -1008,4 +1008,9 @@ const baseStyles = {
     fontSize: 30,
     fontWeight: 800,
   },
+  <img 
+  src="/publiclogo.png" 
+  alt="Accounting Hub Logo"
+  style={{ width: "120px", marginBottom: "10px" }}
+/>
 };
