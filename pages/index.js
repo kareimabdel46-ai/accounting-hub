@@ -2,8 +2,11 @@ import { useMemo, useState } from "react";
 
 export default function Home() {
   const [activePage, setActivePage] = useState("dashboard");
+
   const [financialOpen, setFinancialOpen] = useState(true);
+  const [bankOpen, setBankOpen] = useState(true);
   const [tAccountOpen, setTAccountOpen] = useState(true);
+
   const [assetOpen, setAssetOpen] = useState(true);
   const [liabilityOpen, setLiabilityOpen] = useState(false);
   const [equityOpen, setEquityOpen] = useState(false);
@@ -15,7 +18,7 @@ export default function Home() {
 
   const [salesRevenue, setSalesRevenue] = useState("");
   const [cogs, setCogs] = useState("");
-  const [inventoryExpenses, setInventoryExpenses] = useState(""); 
+  const [inventoryExpenses, setInventoryExpenses] = useState("");
 
   const [assets, setAssets] = useState("");
   const [liabilities, setLiabilities] = useState("");
@@ -34,7 +37,17 @@ export default function Home() {
   const [netIncomeRE, setNetIncomeRE] = useState("");
   const [dividendsRE, setDividendsRE] = useState("");
 
+  const [bookBalance, setBookBalance] = useState("");
+  const [bankBalance, setBankBalance] = useState("");
+  const [depositsInTransit, setDepositsInTransit] = useState("");
+  const [outstandingChecks, setOutstandingChecks] = useState("");
+  const [bankServiceCharge, setBankServiceCharge] = useState("");
+  const [nsfCheck, setNsfCheck] = useState("");
+  const [interestEarned, setInterestEarned] = useState("");
+
   const [selectedAccount, setSelectedAccount] = useState("Accounts Receivable");
+  const [selectedAccountType, setSelectedAccountType] = useState("Assets");
+
   const [tDebit1, setTDebit1] = useState("");
   const [tDebit2, setTDebit2] = useState("");
   const [tCredit1, setTCredit1] = useState("");
@@ -73,6 +86,27 @@ export default function Home() {
     return Number(beginningRE || 0) + Number(netIncomeRE || 0) - Number(dividendsRE || 0);
   }, [beginningRE, netIncomeRE, dividendsRE]);
 
+  const adjustedBankBalance = useMemo(() => {
+    return (
+      Number(bankBalance || 0) +
+      Number(depositsInTransit || 0) -
+      Number(outstandingChecks || 0)
+    );
+  }, [bankBalance, depositsInTransit, outstandingChecks]);
+
+  const adjustedBookBalance = useMemo(() => {
+    return (
+      Number(bookBalance || 0) -
+      Number(bankServiceCharge || 0) -
+      Number(nsfCheck || 0) +
+      Number(interestEarned || 0)
+    );
+  }, [bookBalance, bankServiceCharge, nsfCheck, interestEarned]);
+
+  const reconciliationDifference = useMemo(() => {
+    return adjustedBankBalance - adjustedBookBalance;
+  }, [adjustedBankBalance, adjustedBookBalance]);
+
   const totalDebits = useMemo(() => {
     return Number(tDebit1 || 0) + Number(tDebit2 || 0);
   }, [tDebit1, tDebit2]);
@@ -97,9 +131,13 @@ export default function Home() {
     </button>
   );
 
-  const accountButton = (label) => (
+  const accountButton = (label, type) => (
     <button
-      onClick={() => setSelectedAccount(label)}
+      onClick={() => {
+        setSelectedAccount(label);
+        setSelectedAccountType(type);
+        setActivePage("taccounts");
+      }}
       style={{
         ...styles.subNavButton,
         ...(selectedAccount === label ? styles.subNavButtonActive : {}),
@@ -120,7 +158,13 @@ export default function Home() {
           </div>
         </div>
 
-        <button onClick={() => setActivePage("dashboard")} style={{ ...styles.navButton, ...(activePage === "dashboard" ? styles.navButtonActive : {}) }}>
+        <button
+          onClick={() => setActivePage("dashboard")}
+          style={{
+            ...styles.navButton,
+            ...(activePage === "dashboard" ? styles.navButtonActive : {}),
+          }}
+        >
           Dashboard
         </button>
 
@@ -139,58 +183,76 @@ export default function Home() {
           </div>
         )}
 
+        <button onClick={() => setBankOpen(!bankOpen)} style={styles.navButton}>
+          Bank Reconciliation
+        </button>
+
+        {bankOpen && (
+          <div style={styles.subMenu}>
+            {menuButton("Bank Reconciliation Statement", "bankReconciliation")}
+          </div>
+        )}
+
         <button onClick={() => setTAccountOpen(!tAccountOpen)} style={styles.navButton}>
           T Accounts
         </button>
 
         {tAccountOpen && (
           <div style={styles.subMenu}>
-            <button onClick={() => setAssetOpen(!assetOpen)} style={styles.groupButton}>Assets</button>
+            <button onClick={() => setAssetOpen(!assetOpen)} style={styles.groupButton}>
+              Assets
+            </button>
             {assetOpen && (
               <div style={styles.subMenu}>
-                {accountButton("Accounts Receivable")}
-                {accountButton("Notes Receivable")}
-                {accountButton("Cash")}
-                {accountButton("Supplies")}
-                {accountButton("Equipment")}
+                {accountButton("Accounts Receivable", "Assets")}
+                {accountButton("Notes Receivable", "Assets")}
+                {accountButton("Cash", "Assets")}
+                {accountButton("Supplies", "Assets")}
+                {accountButton("Equipment", "Assets")}
               </div>
             )}
 
-            <button onClick={() => setLiabilityOpen(!liabilityOpen)} style={styles.groupButton}>Liabilities</button>
+            <button onClick={() => setLiabilityOpen(!liabilityOpen)} style={styles.groupButton}>
+              Liabilities
+            </button>
             {liabilityOpen && (
               <div style={styles.subMenu}>
-                {accountButton("Accounts Payable")}
-                {accountButton("Notes Payable")}
-                {accountButton("Unearned Revenue")}
+                {accountButton("Accounts Payable", "Liabilities")}
+                {accountButton("Notes Payable", "Liabilities")}
+                {accountButton("Unearned Revenue", "Liabilities")}
               </div>
             )}
 
-            <button onClick={() => setEquityOpen(!equityOpen)} style={styles.groupButton}>Equity</button>
+            <button onClick={() => setEquityOpen(!equityOpen)} style={styles.groupButton}>
+              Equity
+            </button>
             {equityOpen && (
               <div style={styles.subMenu}>
-                {accountButton("Owner Capital")}
-                {accountButton("Owner Drawings")}
+                {accountButton("Owner Capital", "Equity")}
+                {accountButton("Owner Drawings", "Equity")}
               </div>
             )}
 
-            <button onClick={() => setRevenueOpen(!revenueOpen)} style={styles.groupButton}>Revenue</button>
+            <button onClick={() => setRevenueOpen(!revenueOpen)} style={styles.groupButton}>
+              Revenue
+            </button>
             {revenueOpen && (
               <div style={styles.subMenu}>
-                {accountButton("Service Revenue")}
-                {accountButton("Sales Revenue")}
+                {accountButton("Service Revenue", "Revenue")}
+                {accountButton("Sales Revenue", "Revenue")}
               </div>
             )}
 
-            <button onClick={() => setExpenseOpen(!expenseOpen)} style={styles.groupButton}>Expenses</button>
+            <button onClick={() => setExpenseOpen(!expenseOpen)} style={styles.groupButton}>
+              Expenses
+            </button>
             {expenseOpen && (
               <div style={styles.subMenu}>
-                {accountButton("Rent Expense")}
-                {accountButton("Salary Expense")}
-                {accountButton("Utilities Expense")}
+                {accountButton("Rent Expense", "Expense")}
+                {accountButton("Salary Expense", "Expense")}
+                {accountButton("Utilities Expense", "Expense")}
               </div>
             )}
-
-            {menuButton("Open T Account Workspace", "taccounts")}
           </div>
         )}
       </aside>
@@ -199,7 +261,9 @@ export default function Home() {
         <header style={styles.header}>
           <div>
             <h1 style={styles.pageTitle}>Accounting Hub</h1>
-            <p style={styles.pageSubtitle}>Designed like a professional accounting dashboard.</p>
+            <p style={styles.pageSubtitle}>
+              Designed like a professional accounting dashboard.
+            </p>
           </div>
           <div style={styles.headerBadge}>by Kareem Abdelmajeed</div>
         </header>
@@ -208,10 +272,11 @@ export default function Home() {
           <>
             <section style={styles.hero}>
               <div style={styles.heroTag}>Enterprise Layout</div>
-              <h2 style={styles.heroTitle}>Financial reporting, T-accounts, and equity tracking in one system.</h2>
+              <h2 style={styles.heroTitle}>
+                Financial reporting, bank reconciliation, and T-accounts in one system.
+              </h2>
               <p style={styles.heroText}>
-                Use the sidebar to move between service statements, inventory statements, statement of financial position,
-                cash flow, statement of changes in equity, retained earnings, and categorized T-accounts.
+                Use the sidebar to move between statements, bank reconciliation, and direct T-account pages.
               </p>
             </section>
 
@@ -219,14 +284,17 @@ export default function Home() {
               <Card title="Service Net Income" value={serviceNetIncome} subtitle="Revenue - Expenses" />
               <Card title="Inventory Net Income" value={inventoryNetIncome} subtitle="Sales - COGS - Expenses" />
               <Card title="Total Cash Flow" value={totalCashFlow} subtitle="Operating + Investing + Financing" />
-              <Card title="Ending Equity" value={endingEquity} subtitle="Capital + Investments + NI - Drawings" />
+              <Card title="Adjusted Bank Balance" value={adjustedBankBalance} subtitle="Bank reconciliation" />
             </section>
           </>
         )}
 
         {activePage === "service" && (
           <section style={styles.section}>
-            <SectionTitle title="Income Statement - Service Company" desc="For businesses that provide services and do not sell inventory." />
+            <SectionTitle
+              title="Income Statement - Service Company"
+              desc="For businesses that provide services and do not sell inventory."
+            />
             <div style={styles.twoCol}>
               <Panel>
                 <h3 style={styles.panelTitle}>Inputs</h3>
@@ -243,7 +311,10 @@ export default function Home() {
 
         {activePage === "inventory" && (
           <section style={styles.section}>
-            <SectionTitle title="Income Statement - Inventory Company" desc="For merchandising companies that use sales revenue and cost of goods sold." />
+            <SectionTitle
+              title="Income Statement - Inventory Company"
+              desc="For merchandising companies that use sales revenue and cost of goods sold."
+            />
             <div style={styles.twoCol}>
               <Panel>
                 <h3 style={styles.panelTitle}>Inputs</h3>
@@ -262,7 +333,10 @@ export default function Home() {
 
         {activePage === "sfp" && (
           <section style={styles.section}>
-            <SectionTitle title="Statement of Financial Position" desc="Review whether assets equal liabilities plus equity." />
+            <SectionTitle
+              title="Statement of Financial Position"
+              desc="Review whether assets equal liabilities plus equity."
+            />
             <div style={styles.twoCol}>
               <Panel>
                 <Input label="Assets" value={assets} setValue={setAssets} />
@@ -284,7 +358,10 @@ export default function Home() {
 
         {activePage === "cashflow" && (
           <section style={styles.section}>
-            <SectionTitle title="Cash Flow Statement" desc="Track operating, investing, and financing sections." />
+            <SectionTitle
+              title="Cash Flow Statement"
+              desc="Track operating, investing, and financing sections."
+            />
             <div style={styles.twoCol}>
               <Panel>
                 <Input label="Operating Cash Flow" value={operatingCash} setValue={setOperatingCash} />
@@ -300,7 +377,10 @@ export default function Home() {
 
         {activePage === "equityStatement" && (
           <section style={styles.section}>
-            <SectionTitle title="Statement of Changes in Equity" desc="Track changes in owner equity across the period." />
+            <SectionTitle
+              title="Statement of Changes in Equity"
+              desc="Track changes in owner equity across the period."
+            />
             <div style={styles.twoCol}>
               <Panel>
                 <Input label="Beginning Capital" value={beginningCapital} setValue={setBeginningCapital} />
@@ -317,7 +397,10 @@ export default function Home() {
 
         {activePage === "retainedEarnings" && (
           <section style={styles.section}>
-            <SectionTitle title="Retained Earnings Statement" desc="Track beginning retained earnings, net income, and dividends." />
+            <SectionTitle
+              title="Retained Earnings Statement"
+              desc="Track beginning retained earnings, net income, and dividends."
+            />
             <div style={styles.twoCol}>
               <Panel>
                 <Input label="Beginning Retained Earnings" value={beginningRE} setValue={setBeginningRE} />
@@ -331,9 +414,47 @@ export default function Home() {
           </section>
         )}
 
+        {activePage === "bankReconciliation" && (
+          <section style={styles.section}>
+            <SectionTitle
+              title="Bank Reconciliation Statement"
+              desc="Compare the adjusted bank balance and adjusted book balance."
+            />
+            <div style={styles.twoCol}>
+              <Panel>
+                <h3 style={styles.panelTitle}>Bank Side</h3>
+                <Input label="Bank Balance" value={bankBalance} setValue={setBankBalance} />
+                <Input label="Deposits in Transit" value={depositsInTransit} setValue={setDepositsInTransit} />
+                <Input label="Outstanding Checks" value={outstandingChecks} setValue={setOutstandingChecks} />
+              </Panel>
+
+              <Panel>
+                <h3 style={styles.panelTitle}>Book Side</h3>
+                <Input label="Book Balance" value={bookBalance} setValue={setBookBalance} />
+                <Input label="Bank Service Charge" value={bankServiceCharge} setValue={setBankServiceCharge} />
+                <Input label="NSF Check" value={nsfCheck} setValue={setNsfCheck} />
+                <Input label="Interest Earned" value={interestEarned} setValue={setInterestEarned} />
+              </Panel>
+            </div>
+
+            <div style={{ marginTop: 20 }}>
+              <ResultBox label="Adjusted Bank Balance" value={adjustedBankBalance} />
+              <ResultBox label="Adjusted Book Balance" value={adjustedBookBalance} />
+              <ResultBox
+                label="Reconciliation Status"
+                value={reconciliationDifference === 0 ? "Reconciled correctly" : `Difference: ${reconciliationDifference}`}
+                strong
+              />
+            </div>
+          </section>
+        )}
+
         {activePage === "taccounts" && (
           <section style={styles.section}>
-            <SectionTitle title={`T Account - ${selectedAccount}`} desc="Use the account categories in the sidebar to switch between T-accounts." />
+            <SectionTitle
+              title={`T Account - ${selectedAccount}`}
+              desc={`Category: ${selectedAccountType}. Click any account name in the sidebar to move directly to it.`}
+            />
             <div style={styles.twoCol}>
               <Panel>
                 <Input label="Debit 1" value={tDebit1} setValue={setTDebit1} />
@@ -645,7 +766,7 @@ const styles = {
   },
   tAccount: {
     display: "grid",
-    gridTemplateColumns: "1fr 4px 1fr", 
+    gridTemplateColumns: "1fr 4px 1fr",
     borderRadius: 18,
     overflow: "hidden",
     border: "1px solid #cbd5e1",
