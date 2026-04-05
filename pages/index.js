@@ -1008,9 +1008,16 @@ const baseStyles = {
     fontSize: 30,
     fontWeight: 800,
   },
-  <img 
-  src="/publiclogo.png" 
-  alt="Accounting Hub Logo"
-  style={{ width: "120px", marginBottom: "10px" }}
-/>
+ <div style={{ textAlign: "center" }}>
+
+  <img
+    src="/publiclogo.png"
+    alt="Accounting Hub Logo"
+    style={{ width: "120px", marginBottom: "10px" }}
+  />
+
+  <h1>Accounting Hub</h1>
+  <p>Designed like a professional accounting dashboard.</p>
+
+</div>
 };
