@@ -8,7 +8,7 @@ export default function Home() {
   const [bankOpen, setBankOpen] = useState(true);
   const [tAccountOpen, setTAccountOpen] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(true);
-
+ 
   const [assetOpen, setAssetOpen] = useState(true);
   const [liabilityOpen, setLiabilityOpen] = useState(false);
   const [equityOpen, setEquityOpen] = useState(false);
