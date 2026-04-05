@@ -1277,4 +1277,9 @@ const baseStyles = {
     borderRadius: 20,
     fontSize: 16,
   },
+  <img
+  src="/logo.png"
+  alt="Accounting Hub Logo"
+  style={baseStyles.logoImage}
+/>
 };
