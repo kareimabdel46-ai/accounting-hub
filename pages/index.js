@@ -2,6 +2,13 @@ import { useMemo, useState } from "react";
 
 export default function Home() {
   const [activePage, setActivePage] = useState("dashboard");
+  const [financialOpen, setFinancialOpen] = useState(true);
+  const [tAccountOpen, setTAccountOpen] = useState(true);
+  const [assetOpen, setAssetOpen] = useState(true);
+  const [liabilityOpen, setLiabilityOpen] = useState(false);
+  const [equityOpen, setEquityOpen] = useState(false);
+  const [revenueOpen, setRevenueOpen] = useState(false);
+  const [expenseOpen, setExpenseOpen] = useState(false);
 
   const [serviceRevenue, setServiceRevenue] = useState("");
   const [serviceExpenses, setServiceExpenses] = useState("");
@@ -18,14 +25,20 @@ export default function Home() {
   const [investingCash, setInvestingCash] = useState("");
   const [financingCash, setFinancingCash] = useState("");
 
+  const [beginningCapital, setBeginningCapital] = useState("");
+  const [additionalInvestment, setAdditionalInvestment] = useState("");
+  const [netIncomeEquity, setNetIncomeEquity] = useState("");
+  const [drawings, setDrawings] = useState("");
+
+  const [beginningRE, setBeginningRE] = useState("");
+  const [netIncomeRE, setNetIncomeRE] = useState("");
+  const [dividendsRE, setDividendsRE] = useState("");
+
+  const [selectedAccount, setSelectedAccount] = useState("Accounts Receivable");
   const [tDebit1, setTDebit1] = useState("");
   const [tDebit2, setTDebit2] = useState("");
   const [tCredit1, setTCredit1] = useState("");
   const [tCredit2, setTCredit2] = useState("");
-
-  const [beforeRevenue, setBeforeRevenue] = useState("");
-  const [beforeExpenses, setBeforeExpenses] = useState("");
-  const [adjustments, setAdjustments] = useState("");
 
   const serviceNetIncome = useMemo(() => {
     return Number(serviceRevenue || 0) - Number(serviceExpenses || 0);
@@ -44,12 +57,21 @@ export default function Home() {
   }, [assets, liabilities, equity]);
 
   const totalCashFlow = useMemo(() => {
-    return (
-      Number(operatingCash || 0) +
-      Number(investingCash || 0) +
-      Number(financingCash || 0)
-    );
+    return Number(operatingCash || 0) + Number(investingCash || 0) + Number(financingCash || 0);
   }, [operatingCash, investingCash, financingCash]);
+
+  const endingEquity = useMemo(() => {
+    return (
+      Number(beginningCapital || 0) +
+      Number(additionalInvestment || 0) +
+      Number(netIncomeEquity || 0) -
+      Number(drawings || 0)
+    );
+  }, [beginningCapital, additionalInvestment, netIncomeEquity, drawings]);
+
+  const endingRetainedEarnings = useMemo(() => {
+    return Number(beginningRE || 0) + Number(netIncomeRE || 0) - Number(dividendsRE || 0);
+  }, [beginningRE, netIncomeRE, dividendsRE]);
 
   const totalDebits = useMemo(() => {
     return Number(tDebit1 || 0) + Number(tDebit2 || 0);
@@ -63,22 +85,29 @@ export default function Home() {
     return totalDebits - totalCredits;
   }, [totalDebits, totalCredits]);
 
-  const incomeBeforeAdjustments = useMemo(() => {
-    return Number(beforeRevenue || 0) - Number(beforeExpenses || 0);
-  }, [beforeRevenue, beforeExpenses]);
+  const menuButton = (label, pageKey) => (
+    <button
+      onClick={() => setActivePage(pageKey)}
+      style={{
+        ...styles.subNavButton,
+        ...(activePage === pageKey ? styles.subNavButtonActive : {}),
+      }}
+    >
+      {label}
+    </button>
+  );
 
-  const incomeAfterAdjustments = useMemo(() => {
-    return Number(beforeRevenue || 0) - (Number(beforeExpenses || 0) + Number(adjustments || 0));
-  }, [beforeRevenue, beforeExpenses, adjustments]);
-
-  const menuItems = [
-    { key: "dashboard", label: "Dashboard" },
-    { key: "statements", label: "Financial Statements" },
-    { key: "service", label: "Service Company" },
-    { key: "inventory", label: "Inventory Company" },
-    { key: "taccounts", label: "T Accounts" },
-    { key: "adjustments", label: "Adjusting Entries" },
-  ];
+  const accountButton = (label) => (
+    <button
+      onClick={() => setSelectedAccount(label)}
+      style={{
+        ...styles.subNavButton,
+        ...(selectedAccount === label ? styles.subNavButtonActive : {}),
+      }}
+    >
+      {label}
+    </button>
+  );
 
   return (
     <div style={styles.app}>
@@ -87,41 +116,90 @@ export default function Home() {
           <div style={styles.brandIcon}>AH</div>
           <div>
             <div style={styles.brandTitle}>Accounting Hub</div>
-            <div style={styles.brandSub}>Enterprise Edition</div>
+            <div style={styles.brandSub}>Professional Workspace</div>
           </div>
         </div>
 
-        <div style={styles.navTitle}>Workspace</div>
-        {menuItems.map((item) => (
-          <button
-            key={item.key}
-            onClick={() => setActivePage(item.key)}
-            style={{
-              ...styles.navButton,
-              ...(activePage === item.key ? styles.navButtonActive : {}),
-            }}
-          >
-            {item.label}
-          </button>
-        ))}
+        <button onClick={() => setActivePage("dashboard")} style={{ ...styles.navButton, ...(activePage === "dashboard" ? styles.navButtonActive : {}) }}>
+          Dashboard
+        </button>
 
-        <div style={styles.sidebarFooter}>
-          <div style={styles.firmCard}>
-            <div style={styles.firmCardTitle}>Built for professional use</div>
-            <div style={styles.firmCardText}>
-              Financial statements, T-accounts, and adjusting-entry support in one place.
-            </div>
+        <button onClick={() => setFinancialOpen(!financialOpen)} style={styles.navButton}>
+          Financial Statements
+        </button>
+
+        {financialOpen && (
+          <div style={styles.subMenu}>
+            {menuButton("Income Statement - Service", "service")}
+            {menuButton("Income Statement - Inventory", "inventory")}
+            {menuButton("Statement of Financial Position", "sfp")}
+            {menuButton("Cash Flow Statement", "cashflow")}
+            {menuButton("Statement of Changes in Equity", "equityStatement")}
+            {menuButton("Retained Earnings", "retainedEarnings")}
           </div>
-        </div>
+        )}
+
+        <button onClick={() => setTAccountOpen(!tAccountOpen)} style={styles.navButton}>
+          T Accounts
+        </button>
+
+        {tAccountOpen && (
+          <div style={styles.subMenu}>
+            <button onClick={() => setAssetOpen(!assetOpen)} style={styles.groupButton}>Assets</button>
+            {assetOpen && (
+              <div style={styles.subMenu}>
+                {accountButton("Accounts Receivable")}
+                {accountButton("Notes Receivable")}
+                {accountButton("Cash")}
+                {accountButton("Supplies")}
+                {accountButton("Equipment")}
+              </div>
+            )}
+
+            <button onClick={() => setLiabilityOpen(!liabilityOpen)} style={styles.groupButton}>Liabilities</button>
+            {liabilityOpen && (
+              <div style={styles.subMenu}>
+                {accountButton("Accounts Payable")}
+                {accountButton("Notes Payable")}
+                {accountButton("Unearned Revenue")}
+              </div>
+            )}
+
+            <button onClick={() => setEquityOpen(!equityOpen)} style={styles.groupButton}>Equity</button>
+            {equityOpen && (
+              <div style={styles.subMenu}>
+                {accountButton("Owner Capital")}
+                {accountButton("Owner Drawings")}
+              </div>
+            )}
+
+            <button onClick={() => setRevenueOpen(!revenueOpen)} style={styles.groupButton}>Revenue</button>
+            {revenueOpen && (
+              <div style={styles.subMenu}>
+                {accountButton("Service Revenue")}
+                {accountButton("Sales Revenue")}
+              </div>
+            )}
+
+            <button onClick={() => setExpenseOpen(!expenseOpen)} style={styles.groupButton}>Expenses</button>
+            {expenseOpen && (
+              <div style={styles.subMenu}>
+                {accountButton("Rent Expense")}
+                {accountButton("Salary Expense")}
+                {accountButton("Utilities Expense")}
+              </div>
+            )}
+
+            {menuButton("Open T Account Workspace", "taccounts")}
+          </div>
+        )}
       </aside>
 
       <main style={styles.main}>
         <header style={styles.header}>
           <div>
             <h1 style={styles.pageTitle}>Accounting Hub</h1>
-            <p style={styles.pageSubtitle}>
-              Professional accounting workspace for reporting, analysis, and closing preparation.
-            </p>
+            <p style={styles.pageSubtitle}>Designed like a professional accounting dashboard.</p>
           </div>
           <div style={styles.headerBadge}>by Kareem Abdelmajeed</div>
         </header>
@@ -129,88 +207,26 @@ export default function Home() {
         {activePage === "dashboard" && (
           <>
             <section style={styles.hero}>
-              <div>
-                <div style={styles.heroTag}>Professional Accounting Platform</div>
-                <h2 style={styles.heroTitle}>
-                  A cleaner, smarter way to manage accounting workflows.
-                </h2>
-                <p style={styles.heroText}>
-                  Use one platform for service company statements, merchandising company statements,
-                  T-accounts, and before-and-after adjusting entry analysis.
-                </p>
-              </div>
+              <div style={styles.heroTag}>Enterprise Layout</div>
+              <h2 style={styles.heroTitle}>Financial reporting, T-accounts, and equity tracking in one system.</h2>
+              <p style={styles.heroText}>
+                Use the sidebar to move between service statements, inventory statements, statement of financial position,
+                cash flow, statement of changes in equity, retained earnings, and categorized T-accounts.
+              </p>
             </section>
 
             <section style={styles.cardGrid}>
-              <Card title="Service Income Statement" value={serviceNetIncome} subtitle="Revenue - Expenses" />
+              <Card title="Service Net Income" value={serviceNetIncome} subtitle="Revenue - Expenses" />
               <Card title="Inventory Net Income" value={inventoryNetIncome} subtitle="Sales - COGS - Expenses" />
-              <Card title="Cash Flow Total" value={totalCashFlow} subtitle="Operating + Investing + Financing" />
-              <Card
-                title="Balance Sheet Status"
-                value={balanceCheck === 0 ? "Balanced" : "Unbalanced"}
-                subtitle="Assets = Liabilities + Equity"
-                isText
-              />
+              <Card title="Total Cash Flow" value={totalCashFlow} subtitle="Operating + Investing + Financing" />
+              <Card title="Ending Equity" value={endingEquity} subtitle="Capital + Investments + NI - Drawings" />
             </section>
           </>
         )}
 
-        {activePage === "statements" && (
-          <section style={styles.section}>
-            <SectionTitle
-              title="Financial Statements"
-              desc="Review the three core financial statements in one professional dashboard."
-            />
-            <div style={styles.cardGrid}>
-              <Panel>
-                <h3 style={styles.panelTitle}>Income Statement</h3>
-                <p style={styles.panelText}>
-                  Used to measure profitability across a period.
-                </p>
-              </Panel>
-              <Panel>
-                <h3 style={styles.panelTitle}>Balance Sheet</h3>
-                <p style={styles.panelText}>
-                  Shows assets, liabilities, and owner’s equity at a point in time.
-                </p>
-              </Panel>
-              <Panel>
-                <h3 style={styles.panelTitle}>Cash Flow Statement</h3>
-                <p style={styles.panelText}>
-                  Tracks operating, investing, and financing cash activity.
-                </p>
-              </Panel>
-            </div>
-
-            <div style={styles.twoCol}>
-              <Panel>
-                <h3 style={styles.panelTitle}>Balance Sheet Checker</h3>
-                <Input label="Assets" value={assets} setValue={setAssets} />
-                <Input label="Liabilities" value={liabilities} setValue={setLiabilities} />
-                <Input label="Equity" value={equity} setValue={setEquity} />
-                <ResultBox
-                  label="Status"
-                  value={balanceCheck === 0 ? "Balanced correctly" : `Difference: ${balanceCheck}`}
-                />
-              </Panel>
-
-              <Panel>
-                <h3 style={styles.panelTitle}>Cash Flow Statement</h3>
-                <Input label="Operating Cash Flow" value={operatingCash} setValue={setOperatingCash} />
-                <Input label="Investing Cash Flow" value={investingCash} setValue={setInvestingCash} />
-                <Input label="Financing Cash Flow" value={financingCash} setValue={setFinancingCash} />
-                <ResultBox label="Total Cash Flow" value={totalCashFlow} />
-              </Panel>
-            </div>
-          </section>
-        )}
-
         {activePage === "service" && (
           <section style={styles.section}>
-            <SectionTitle
-              title="Service Company Income Statement"
-              desc="Designed for businesses that earn revenue from services instead of selling inventory."
-            />
+            <SectionTitle title="Income Statement - Service Company" desc="For businesses that provide services and do not sell inventory." />
             <div style={styles.twoCol}>
               <Panel>
                 <h3 style={styles.panelTitle}>Inputs</h3>
@@ -219,8 +235,6 @@ export default function Home() {
               </Panel>
               <Panel>
                 <h3 style={styles.panelTitle}>Results</h3>
-                <ResultBox label="Service Revenue" value={Number(serviceRevenue || 0)} />
-                <ResultBox label="Operating Expenses" value={Number(serviceExpenses || 0)} />
                 <ResultBox label="Net Income" value={serviceNetIncome} strong />
               </Panel>
             </div>
@@ -229,28 +243,89 @@ export default function Home() {
 
         {activePage === "inventory" && (
           <section style={styles.section}>
-            <SectionTitle
-              title="Inventory Company Income Statement"
-              desc="Built for merchandising businesses that calculate gross profit and net income."
-            />
+            <SectionTitle title="Income Statement - Inventory Company" desc="For merchandising companies that use sales revenue and cost of goods sold." />
             <div style={styles.twoCol}>
               <Panel>
                 <h3 style={styles.panelTitle}>Inputs</h3>
                 <Input label="Sales Revenue" value={salesRevenue} setValue={setSalesRevenue} />
                 <Input label="Cost of Goods Sold" value={cogs} setValue={setCogs} />
-                <Input
-                  label="Operating Expenses"
-                  value={inventoryExpenses}
-                  setValue={setInventoryExpenses}
-                />
+                <Input label="Operating Expenses" value={inventoryExpenses} setValue={setInventoryExpenses} />
               </Panel>
               <Panel>
                 <h3 style={styles.panelTitle}>Results</h3>
-                <ResultBox label="Sales Revenue" value={Number(salesRevenue || 0)} />
-                <ResultBox label="COGS" value={Number(cogs || 0)} />
                 <ResultBox label="Gross Profit" value={inventoryGrossProfit} />
-                <ResultBox label="Operating Expenses" value={Number(inventoryExpenses || 0)} />
                 <ResultBox label="Net Income" value={inventoryNetIncome} strong />
+              </Panel>
+            </div>
+          </section>
+        )}
+
+        {activePage === "sfp" && (
+          <section style={styles.section}>
+            <SectionTitle title="Statement of Financial Position" desc="Review whether assets equal liabilities plus equity." />
+            <div style={styles.twoCol}>
+              <Panel>
+                <Input label="Assets" value={assets} setValue={setAssets} />
+                <Input label="Liabilities" value={liabilities} setValue={setLiabilities} />
+                <Input label="Equity" value={equity} setValue={setEquity} />
+              </Panel>
+              <Panel>
+                <ResultBox label="Assets" value={Number(assets || 0)} />
+                <ResultBox label="Liabilities + Equity" value={Number(liabilities || 0) + Number(equity || 0)} />
+                <ResultBox
+                  label="Status"
+                  value={balanceCheck === 0 ? "Balanced correctly" : `Difference: ${balanceCheck}`}
+                  strong
+                />
+              </Panel>
+            </div>
+          </section>
+        )}
+
+        {activePage === "cashflow" && (
+          <section style={styles.section}>
+            <SectionTitle title="Cash Flow Statement" desc="Track operating, investing, and financing sections." />
+            <div style={styles.twoCol}>
+              <Panel>
+                <Input label="Operating Cash Flow" value={operatingCash} setValue={setOperatingCash} />
+                <Input label="Investing Cash Flow" value={investingCash} setValue={setInvestingCash} />
+                <Input label="Financing Cash Flow" value={financingCash} setValue={setFinancingCash} />
+              </Panel>
+              <Panel>
+                <ResultBox label="Total Cash Flow" value={totalCashFlow} strong />
+              </Panel>
+            </div>
+          </section>
+        )}
+
+        {activePage === "equityStatement" && (
+          <section style={styles.section}>
+            <SectionTitle title="Statement of Changes in Equity" desc="Track changes in owner equity across the period." />
+            <div style={styles.twoCol}>
+              <Panel>
+                <Input label="Beginning Capital" value={beginningCapital} setValue={setBeginningCapital} />
+                <Input label="Additional Investment" value={additionalInvestment} setValue={setAdditionalInvestment} />
+                <Input label="Net Income" value={netIncomeEquity} setValue={setNetIncomeEquity} />
+                <Input label="Drawings" value={drawings} setValue={setDrawings} />
+              </Panel>
+              <Panel>
+                <ResultBox label="Ending Equity" value={endingEquity} strong />
+              </Panel>
+            </div>
+          </section>
+        )}
+
+        {activePage === "retainedEarnings" && (
+          <section style={styles.section}>
+            <SectionTitle title="Retained Earnings Statement" desc="Track beginning retained earnings, net income, and dividends." />
+            <div style={styles.twoCol}>
+              <Panel>
+                <Input label="Beginning Retained Earnings" value={beginningRE} setValue={setBeginningRE} />
+                <Input label="Net Income" value={netIncomeRE} setValue={setNetIncomeRE} />
+                <Input label="Dividends" value={dividendsRE} setValue={setDividendsRE} />
+              </Panel>
+              <Panel>
+                <ResultBox label="Ending Retained Earnings" value={endingRetainedEarnings} strong />
               </Panel>
             </div>
           </section>
@@ -258,21 +333,15 @@ export default function Home() {
 
         {activePage === "taccounts" && (
           <section style={styles.section}>
-            <SectionTitle
-              title="T Accounts"
-              desc="Use this area to compare total debits and total credits in a simple T-account view."
-            />
+            <SectionTitle title={`T Account - ${selectedAccount}`} desc="Use the account categories in the sidebar to switch between T-accounts." />
             <div style={styles.twoCol}>
               <Panel>
-                <h3 style={styles.panelTitle}>T-Account Entry</h3>
                 <Input label="Debit 1" value={tDebit1} setValue={setTDebit1} />
                 <Input label="Debit 2" value={tDebit2} setValue={setTDebit2} />
                 <Input label="Credit 1" value={tCredit1} setValue={setTCredit1} />
                 <Input label="Credit 2" value={tCredit2} setValue={setTCredit2} />
               </Panel>
-
               <Panel>
-                <h3 style={styles.panelTitle}>T-Account Summary</h3>
                 <div style={styles.tAccount}>
                   <div style={styles.tSide}>
                     <div style={styles.tHeading}>Debits</div>
@@ -284,30 +353,7 @@ export default function Home() {
                     <div style={styles.tValue}>{totalCredits}</div>
                   </div>
                 </div>
-                <ResultBox label="Account Balance" value={tBalance} strong />
-              </Panel>
-            </div>
-          </section>
-        )}
-
-        {activePage === "adjustments" && (
-          <section style={styles.section}>
-            <SectionTitle
-              title="Before and After Adjusting Entries"
-              desc="Compare net income before adjustments and after recording period-end adjustments."
-            />
-            <div style={styles.twoCol}>
-              <Panel>
-                <h3 style={styles.panelTitle}>Before Adjustments</h3>
-                <Input label="Revenue Before Adjustments" value={beforeRevenue} setValue={setBeforeRevenue} />
-                <Input label="Expenses Before Adjustments" value={beforeExpenses} setValue={setBeforeExpenses} />
-                <ResultBox label="Income Before Adjustments" value={incomeBeforeAdjustments} />
-              </Panel>
-
-              <Panel>
-                <h3 style={styles.panelTitle}>After Adjustments</h3>
-                <Input label="Adjusting Entries Total" value={adjustments} setValue={setAdjustments} />
-                <ResultBox label="Income After Adjustments" value={incomeAfterAdjustments} strong />
+                <ResultBox label="Balance" value={tBalance} strong />
               </Panel>
             </div>
           </section>
@@ -326,13 +372,11 @@ function SectionTitle({ title, desc }) {
   );
 }
 
-function Card({ title, value, subtitle, isText = false }) {
+function Card({ title, value, subtitle }) {
   return (
     <div style={styles.summaryCard}>
       <div style={styles.summaryTitle}>{title}</div>
-      <div style={styles.summaryValue}>
-        {isText ? value : typeof value === "number" ? formatNumber(value) : value}
-      </div>
+      <div style={styles.summaryValue}>{formatNumber(value)}</div>
       <div style={styles.summarySub}>{subtitle}</div>
     </div>
   );
@@ -367,31 +411,29 @@ function ResultBox({ label, value, strong = false }) {
 }
 
 function formatNumber(value) {
-  return new Intl.NumberFormat("en-US").format(value);
+  return new Intl.NumberFormat("en-US").format(value || 0);
 }
 
 const styles = {
   app: {
     minHeight: "100vh",
     display: "flex",
-    background:
-      "linear-gradient(135deg, #0f172a 0%, #111827 35%, #e5e7eb 35%, #f8fafc 100%)",
-    fontFamily: "Inter, Arial, sans-serif",
+    background: "linear-gradient(135deg, #0f172a 0%, #111827 35%, #e5e7eb 35%, #f8fafc 100%)",
+    fontFamily: "Arial, sans-serif",
     color: "#0f172a",
   },
   sidebar: {
-    width: 290,
+    width: 320,
     background: "linear-gradient(180deg, #0f172a 0%, #111827 100%)",
-    color: "#ffffff",
+    color: "#fff",
     padding: 24,
-    display: "flex",
-    flexDirection: "column",
     borderRight: "1px solid rgba(255,255,255,0.08)",
+    overflowY: "auto",
   },
   brandBox: {
     display: "flex",
-    alignItems: "center",
     gap: 14,
+    alignItems: "center",
     marginBottom: 28,
   },
   brandIcon: {
@@ -402,9 +444,7 @@ const styles = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontWeight: "700",
-    fontSize: 18,
-    boxShadow: "0 10px 25px rgba(37,99,235,0.35)",
+    fontWeight: 700,
   },
   brandTitle: {
     fontSize: 20,
@@ -415,64 +455,67 @@ const styles = {
     color: "#94a3b8",
     marginTop: 4,
   },
-  navTitle: {
-    color: "#94a3b8",
-    fontSize: 12,
-    textTransform: "uppercase",
-    letterSpacing: 1,
-    marginBottom: 12,
-  },
   navButton: {
     width: "100%",
     textAlign: "left",
     padding: "14px 16px",
     borderRadius: 14,
     border: "none",
-    background: "transparent",
-    color: "#e5e7eb",
-    marginBottom: 8,
+    background: "rgba(255,255,255,0.04)",
+    color: "#fff",
+    marginBottom: 10,
     cursor: "pointer",
     fontSize: 15,
-    transition: "0.2s",
   },
   navButtonActive: {
-    background: "linear-gradient(90deg, rgba(59,130,246,0.22), rgba(56,189,248,0.18))",
-    color: "#ffffff",
-    boxShadow: "inset 0 0 0 1px rgba(125,211,252,0.22)",
+    background: "linear-gradient(90deg, rgba(59,130,246,0.28), rgba(56,189,248,0.18))",
   },
-  sidebarFooter: {
-    marginTop: "auto",
-  },
-  firmCard: {
-    background: "rgba(255,255,255,0.06)",
-    borderRadius: 18,
-    padding: 16,
-    border: "1px solid rgba(255,255,255,0.08)",
-  },
-  firmCardTitle: {
-    fontWeight: 700,
-    marginBottom: 8,
-  },
-  firmCardText: {
+  groupButton: {
+    width: "100%",
+    textAlign: "left",
+    padding: "10px 14px",
+    borderRadius: 12,
+    border: "none",
+    background: "transparent",
     color: "#cbd5e1",
-    fontSize: 13,
-    lineHeight: 1.5,
+    marginBottom: 6,
+    cursor: "pointer",
+    fontSize: 14,
+    fontWeight: 700,
+  },
+  subMenu: {
+    marginLeft: 12,
+    marginBottom: 12,
+  },
+  subNavButton: {
+    width: "100%",
+    textAlign: "left",
+    padding: "10px 14px",
+    borderRadius: 12,
+    border: "none",
+    background: "transparent",
+    color: "#cbd5e1",
+    marginBottom: 6,
+    cursor: "pointer",
+    fontSize: 14,
+  },
+  subNavButtonActive: {
+    background: "rgba(59,130,246,0.22)",
+    color: "#fff",
   },
   main: {
     flex: 1,
     padding: 30,
   },
   header: {
-    background: "rgba(255,255,255,0.82)",
-    backdropFilter: "blur(10px)",
+    background: "rgba(255,255,255,0.84)",
     borderRadius: 24,
     padding: 26,
     display: "flex",
-    alignItems: "center",
     justifyContent: "space-between",
-    boxShadow: "0 12px 40px rgba(15,23,42,0.08)",
+    alignItems: "center",
     marginBottom: 24,
-    gap: 20,
+    boxShadow: "0 12px 40px rgba(15,23,42,0.08)",
   },
   pageTitle: {
     margin: 0,
@@ -482,22 +525,18 @@ const styles = {
   pageSubtitle: {
     margin: "8px 0 0 0",
     color: "#475569",
-    fontSize: 15,
   },
   headerBadge: {
     background: "linear-gradient(135deg, #dbeafe, #e0f2fe)",
-    color: "#0f172a",
     padding: "10px 14px",
     borderRadius: 999,
     fontWeight: 600,
-    whiteSpace: "nowrap",
   },
   hero: {
     background: "linear-gradient(135deg, #1d4ed8 0%, #0f766e 100%)",
     color: "white",
     borderRadius: 28,
     padding: 32,
-    boxShadow: "0 18px 50px rgba(15,23,42,0.18)",
     marginBottom: 24,
   },
   heroTag: {
@@ -511,21 +550,16 @@ const styles = {
   heroTitle: {
     margin: 0,
     fontSize: 34,
-    lineHeight: 1.2,
-    maxWidth: 720,
   },
   heroText: {
     marginTop: 14,
-    maxWidth: 760,
-    color: "rgba(255,255,255,0.88)",
     lineHeight: 1.7,
-    fontSize: 15,
+    maxWidth: 760,
   },
   cardGrid: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
     gap: 18,
-    marginBottom: 24,
   },
   summaryCard: {
     background: "rgba(255,255,255,0.9)",
@@ -548,7 +582,7 @@ const styles = {
     fontSize: 13,
   },
   section: {
-    background: "rgba(255,255,255,0.82)",
+    background: "rgba(255,255,255,0.84)",
     borderRadius: 28,
     padding: 28,
     boxShadow: "0 12px 35px rgba(15,23,42,0.08)",
@@ -561,7 +595,6 @@ const styles = {
   sectionDesc: {
     margin: "8px 0 0 0",
     color: "#64748b",
-    fontSize: 15,
   },
   twoCol: {
     display: "grid",
@@ -569,10 +602,9 @@ const styles = {
     gap: 20,
   },
   panel: {
-    background: "#ffffff",
+    background: "#fff",
     borderRadius: 22,
     padding: 22,
-    boxShadow: "0 10px 30px rgba(15,23,42,0.06)",
     border: "1px solid #e2e8f0",
   },
   panelTitle: {
@@ -580,11 +612,6 @@ const styles = {
     marginBottom: 18,
     fontSize: 22,
     fontWeight: 700,
-  },
-  panelText: {
-    color: "#475569",
-    lineHeight: 1.6,
-    fontSize: 15,
   },
   label: {
     display: "block",
@@ -598,8 +625,6 @@ const styles = {
     padding: "14px 16px",
     borderRadius: 14,
     border: "1px solid #cbd5e1",
-    outline: "none",
-    fontSize: 15,
     background: "#f8fafc",
     boxSizing: "border-box",
   },
@@ -620,8 +645,7 @@ const styles = {
   },
   tAccount: {
     display: "grid",
-    gridTemplateColumns: "1fr 4px 1fr",
-    alignItems: "stretch",
+    gridTemplateColumns: "1fr 4px 1fr", 
     borderRadius: 18,
     overflow: "hidden",
     border: "1px solid #cbd5e1",
@@ -630,7 +654,7 @@ const styles = {
   },
   tSide: {
     padding: 22,
-    background: "#ffffff",
+    background: "#fff",
   },
   tDivider: {
     background: "#0f172a",
