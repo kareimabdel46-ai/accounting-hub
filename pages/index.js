@@ -18,7 +18,7 @@ export default function Home() {
 
   const [salesRevenue, setSalesRevenue] = useState("");
   const [cogs, setCogs] = useState("");
-  const [inventoryExpenses, setInventoryExpenses] = useState(""); 
+  const [inventoryExpenses, setInventoryExpenses] = useState("");
 
   const [assets, setAssets] = useState("");
   const [liabilities, setLiabilities] = useState("");
@@ -45,7 +45,7 @@ export default function Home() {
   const [nsfCheck, setNsfCheck] = useState("");
   const [interestEarned, setInterestEarned] = useState("");
 
-  const [selectedAccount, setSelectedAccount] = useState("Accounts Receivable");
+  const [selectedAccount, setSelectedAccount] = useState("Cash");
   const [selectedAccountType, setSelectedAccountType] = useState("Assets");
 
   const [tDebit1, setTDebit1] = useState("");
@@ -118,6 +118,12 @@ export default function Home() {
   const tBalance = useMemo(() => {
     return totalDebits - totalCredits;
   }, [totalDebits, totalCredits]);
+
+  const openAccountFromDashboard = (accountName, accountType) => {
+    setSelectedAccount(accountName);
+    setSelectedAccountType(accountType);
+    setActivePage("taccounts");
+  };
 
   const menuButton = (label, pageKey) => (
     <button
@@ -204,9 +210,9 @@ export default function Home() {
             </button>
             {assetOpen && (
               <div style={styles.subMenu}>
+                {accountButton("Cash", "Assets")}
                 {accountButton("Accounts Receivable", "Assets")}
                 {accountButton("Notes Receivable", "Assets")}
-                {accountButton("Cash", "Assets")}
                 {accountButton("Supplies", "Assets")}
                 {accountButton("Equipment", "Assets")}
               </div>
@@ -286,6 +292,60 @@ export default function Home() {
               <Card title="Total Cash Flow" value={totalCashFlow} subtitle="Operating + Investing + Financing" />
               <Card title="Adjusted Bank Balance" value={adjustedBankBalance} subtitle="Bank reconciliation" />
             </section>
+
+            <div style={{ marginTop: 28 }}>
+              <h3 style={styles.quickTitle}>Quick Account Access</h3>
+              <div style={styles.cardGrid}>
+                <AccountBox
+                  title="Cash"
+                  value={0}
+                  subtitle="Asset account"
+                  onClick={() => openAccountFromDashboard("Cash", "Assets")}
+                />
+                <AccountBox
+                  title="Accounts Receivable"
+                  value={0}
+                  subtitle="Asset account"
+                  onClick={() => openAccountFromDashboard("Accounts Receivable", "Assets")}
+                />
+                <AccountBox
+                  title="Notes Receivable"
+                  value={0}
+                  subtitle="Asset account"
+                  onClick={() => openAccountFromDashboard("Notes Receivable", "Assets")}
+                />
+                <AccountBox
+                  title="Accounts Payable"
+                  value={0}
+                  subtitle="Liability account"
+                  onClick={() => openAccountFromDashboard("Accounts Payable", "Liabilities")}
+                />
+                <AccountBox
+                  title="Notes Payable"
+                  value={0}
+                  subtitle="Liability account"
+                  onClick={() => openAccountFromDashboard("Notes Payable", "Liabilities")}
+                />
+                <AccountBox
+                  title="Owner Capital"
+                  value={0}
+                  subtitle="Equity account"
+                  onClick={() => openAccountFromDashboard("Owner Capital", "Equity")}
+                />
+                <AccountBox
+                  title="Service Revenue"
+                  value={0}
+                  subtitle="Revenue account"
+                  onClick={() => openAccountFromDashboard("Service Revenue", "Revenue")}
+                />
+                <AccountBox
+                  title="Rent Expense"
+                  value={0}
+                  subtitle="Expense account"
+                  onClick={() => openAccountFromDashboard("Rent Expense", "Expense")}
+                />
+              </div>
+            </div>
           </>
         )}
 
@@ -453,7 +513,7 @@ export default function Home() {
           <section style={styles.section}>
             <SectionTitle
               title={`T Account - ${selectedAccount}`}
-              desc={`Category: ${selectedAccountType}. Click any account name in the sidebar to move directly to it.`}
+              desc={`Category: ${selectedAccountType}. Click any account name in the sidebar or dashboard to move directly to it.`}
             />
             <div style={styles.twoCol}>
               <Panel>
@@ -500,6 +560,16 @@ function Card({ title, value, subtitle }) {
       <div style={styles.summaryValue}>{formatNumber(value)}</div>
       <div style={styles.summarySub}>{subtitle}</div>
     </div>
+  );
+}
+
+function AccountBox({ title, value, subtitle, onClick }) {
+  return (
+    <button onClick={onClick} style={styles.accountBox}>
+      <div style={styles.summaryTitle}>{title}</div>
+      <div style={styles.summaryValue}>{formatNumber(value)}</div>
+      <div style={styles.summarySub}>{subtitle}</div>
+    </button>
   );
 }
 
@@ -677,6 +747,11 @@ const styles = {
     lineHeight: 1.7,
     maxWidth: 760,
   },
+  quickTitle: {
+    fontSize: 24,
+    marginBottom: 16,
+    color: "#0f172a",
+  },
   cardGrid: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
@@ -688,6 +763,15 @@ const styles = {
     padding: 22,
     boxShadow: "0 12px 35px rgba(15,23,42,0.08)",
   },
+  accountBox: {
+    background: "rgba(255,255,255,0.95)",
+    borderRadius: 22,
+    padding: 22,
+    boxShadow: "0 12px 35px rgba(15,23,42,0.08)",
+    border: "1px solid #e2e8f0",
+    cursor: "pointer",
+    textAlign: "left",
+  },
   summaryTitle: {
     color: "#475569",
     fontSize: 14,
@@ -697,6 +781,7 @@ const styles = {
     fontSize: 28,
     fontWeight: 800,
     marginBottom: 8,
+    color: "#0f172a",
   },
   summarySub: {
     color: "#64748b",
