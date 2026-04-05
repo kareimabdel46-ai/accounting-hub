@@ -21,7 +21,7 @@ export default function Home() {
   const [inventoryExpenses, setInventoryExpenses] = useState("");
 
   const [assets, setAssets] = useState("");
-  const [liabilities, setLiabilities] = useState("");
+  const [liabilities, setLiabilities] = useState(""); 
   const [equity, setEquity] = useState("");
 
   const [operatingCash, setOperatingCash] = useState("");
